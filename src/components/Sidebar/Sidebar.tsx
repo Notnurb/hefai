@@ -17,6 +17,7 @@ import {
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import { Terminal } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
@@ -51,6 +52,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
     const isImagesActive = pathname?.startsWith('/images');
     const isVideosActive = pathname?.startsWith('/videos');
     const isCodeActive = pathname?.startsWith('/code');
+    const isEpilsonCodeActive = pathname?.startsWith('/epilson-code');
 
     return (
         <motion.aside
@@ -113,6 +115,15 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
                             }`}>
                             <HugeiconsIcon icon={SourceCodeIcon} size={18} />
                             <span>Code</span>
+                        </div>
+                    </Link>
+                    <Link href="/epilson-code" className="block">
+                        <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isEpilsonCodeActive
+                            ? 'bg-sidebar-accent text-sidebar-foreground'
+                            : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
+                            }`}>
+                            <Terminal size={18} />
+                            <span>Epilson Code</span>
                         </div>
                     </Link>
                 </div>
