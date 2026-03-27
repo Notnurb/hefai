@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import MessageBubble from './MessageBubble';
 import { Message } from '@/types';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -31,6 +31,14 @@ export default function ChatArea({
     const bottomRef = useRef<HTMLDivElement>(null);
     const scrollFrameRef = useRef<number | null>(null);
     const lastStreamScrollRef = useRef(0);
+    const [isNearBottom, setIsNearBottom] = useState(true);
+
+    const handleScroll = useCallback(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        const threshold = 120;
+        setIsNearBottom(el.scrollHeight - el.scrollTop - el.clientHeight < threshold);
+    }, []);
 
     const renderedMessages = useMemo(
         () =>
@@ -54,9 +62,9 @@ export default function ChatArea({
         [streamingMessageId, selectedModel]
     );
 
-    // Auto-scroll to bottom on new messages or streaming content
+    // Auto-scroll to bottom only when user is near the bottom
     useEffect(() => {
-        if (!bottomRef.current) return;
+        if (!bottomRef.current || !isNearBottom) return;
 
         const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
         if (isStreaming && now - lastStreamScrollRef.current < 80) {
@@ -82,7 +90,12 @@ export default function ChatArea({
                 scrollFrameRef.current = null;
             }
         };
-    }, [messages.length, isStreaming, streamingContent]);
+    }, [messages.length, isStreaming, streamingContent, isNearBottom]);
+
+    // Snap to bottom when user sends a new message
+    useEffect(() => {
+        setIsNearBottom(true);
+    }, [messages.length]);
 
     return (
         <div className="flex-1 overflow-hidden relative flex flex-col">
@@ -100,6 +113,7 @@ export default function ChatArea({
             ) : (
                 <div
                     ref={scrollRef}
+                    onScroll={handleScroll}
                     className="flex-1 overflow-y-auto px-4 md:px-8 py-4 scroll-smooth"
                 >
                     <div className="max-w-3xl mx-auto flex flex-col pb-4">

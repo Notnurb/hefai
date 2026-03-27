@@ -13,9 +13,8 @@ import { Spotlight } from '@/components/ui/spotlight';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
 import { LandingHeader as Header } from '@/components/ui/landing-header';
 import { LandingFooter as Footer } from '@/components/ui/landing-footer';
-import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
 import { DownloadShowcase } from '@/components/ui/download-options-section';
-import { Sparkles, ArrowRight, Image, Video, Search, Zap, Cpu } from 'lucide-react';
+import { Sparkles, ArrowRight, Image, Video, Search, Zap, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import React from 'react';
@@ -42,17 +41,6 @@ export default function Landing() {
                         transition={{ duration: 0.6 }}
                         className="w-full max-w-6xl mx-auto"
                     >
-                        {/* NanoLink AGI Acquisition Badge */}
-                        <Link href="#" className="flex justify-center mb-6">
-                            <div className="group rounded-full border border-white/10 bg-white/5 text-base transition-all ease-in hover:cursor-pointer hover:bg-white/10">
-                                <AnimatedShinyText shimmerWidth={100} className="inline-flex items-center justify-center px-4 py-1 transition ease-out">
-                                    <Cpu className="w-4 h-4 mr-2" />
-                                    <span>NanoLink AGI Acquired</span>
-                                    <ArrowRight className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-                                </AnimatedShinyText>
-                            </div>
-                        </Link>
-
                         {/* Main Heading */}
                         <h1 className="text-5xl md:text-7xl font-bold mb-8 text-center text-white">
                             Meet Tripplet
@@ -144,11 +132,50 @@ export default function Landing() {
                         </ul>
                     </motion.div>
 
-                    {/* Download Options Section */}
+                    {/* Triplepedia Section */}
                     <motion.div
                         initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.5 }}
+                        className="w-full max-w-6xl mx-auto"
+                    >
+                        <Card className="bg-black/40 border-white/10 overflow-hidden">
+                            <div className="flex flex-col md:flex-row items-center gap-8 p-8 md:p-12">
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center">
+                                            <BookOpen className="w-5 h-5 text-white" />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl font-bold text-white">Triplepedia</h2>
+                                            <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded bg-blue-500/15 text-blue-400 border border-blue-500/20 leading-none">
+                                                Beta
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p className="text-white/60 text-lg mb-6 leading-relaxed">
+                                        An AI-powered encyclopedia with fact-checked articles. Search, read, and contribute knowledge — all verified by Taipei 3.1 Extended.
+                                    </p>
+                                    <Link href="/triplepedia">
+                                        <Button size="lg" variant="outline" className="bg-white/5 border-white/20 text-white hover:bg-white/10 px-8 py-6 text-lg rounded-xl">
+                                            Explore Triplepedia
+                                            <ArrowRight className="w-5 h-5 ml-2" />
+                                        </Button>
+                                    </Link>
+                                </div>
+                                <div className="flex-shrink-0 text-center">
+                                    <p className="font-serif text-6xl font-normal text-white/80 tracking-tight">Tp</p>
+                                    <p className="text-xs text-white/30 mt-2 tracking-widest uppercase">v0.1</p>
+                                </div>
+                            </div>
+                        </Card>
+                    </motion.div>
+
+                    {/* Download Options Section */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 40 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.7 }}
                         className="w-full max-w-6xl mx-auto"
                     >
                         <DownloadShowcase />

@@ -24,7 +24,7 @@ export function LandingFooter() {
                         <h3 className="text-white font-semibold mb-4">Features</h3>
                         <ul className="space-y-2">
                             <li><span className="text-white/50 text-sm">Hefai</span></li>
-                            <li><span className="text-white/50 text-sm">Tripplet AI Studio</span></li>
+                            <li><Link href="/triplepedia" className="text-white/50 text-sm hover:text-white transition-colors">Triplepedia</Link></li>
                             <li><span className="text-white/50 text-sm">Video Playground</span></li>
                             <li><span className="text-white/50 text-sm">Image Playground</span></li>
                             <li><Link href="#" className="text-white/50 text-sm hover:text-white transition-colors">API</Link></li>

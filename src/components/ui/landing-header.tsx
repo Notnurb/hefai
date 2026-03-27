@@ -292,12 +292,6 @@ const featureLinks: LinkItem[] = [
         icon: Sparkles,
     },
     {
-        title: 'Hefai AI Studio',
-        href: '/studio',
-        description: 'Professional AI content creation',
-        icon: Zap,
-    },
-    {
         title: 'Hefai Insiders Program',
         href: '/insiders',
         description: 'Early access to new features',

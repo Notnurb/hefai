@@ -3,6 +3,7 @@ export interface Model {
     name: string;
     description: string;
     apiModel: string;
+    tag?: 'preview' | 'beta' | 'new';
 }
 
 export const MODELS: Model[] = [
@@ -23,6 +24,13 @@ export const MODELS: Model[] = [
         name: 'Suzhou 3',
         description: 'Creative and detailed generation',
         apiModel: 'grok-3-mini',
+    },
+    {
+        id: 'suzhou-3.1',
+        name: 'Suzhou 3.1',
+        description: 'Next-gen creative model (in development)',
+        apiModel: 'grok-4.20-beta-0309-non-reasoning',
+        tag: 'preview',
     },
 ];
 

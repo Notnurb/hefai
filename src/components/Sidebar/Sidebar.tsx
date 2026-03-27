@@ -13,6 +13,7 @@ import {
     Image01Icon,
     Video01Icon,
     SourceCodeIcon,
+    Book02Icon,
 } from '@hugeicons/core-free-icons';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -53,6 +54,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
     const isVideosActive = pathname?.startsWith('/videos');
     const isCodeActive = pathname?.startsWith('/code');
     const isEpilsonCodeActive = pathname?.startsWith('/epilson-code');
+    const isTriplepediaActive = pathname?.startsWith('/triplepedia');
 
     return (
         <motion.aside
@@ -124,6 +126,18 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
                             }`}>
                             <Terminal size={18} />
                             <span>Epilson Code</span>
+                        </div>
+                    </Link>
+                    <Link href="/triplepedia" className="block">
+                        <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isTriplepediaActive
+                            ? 'bg-sidebar-accent text-sidebar-foreground'
+                            : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
+                            }`}>
+                            <HugeiconsIcon icon={Book02Icon} size={18} />
+                            <span>Triplepedia</span>
+                            <span className="ml-auto px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded bg-blue-500/15 text-blue-400 border border-blue-500/20 leading-none">
+                                Beta
+                            </span>
                         </div>
                     </Link>
                 </div>

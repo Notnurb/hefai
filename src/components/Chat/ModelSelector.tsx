@@ -60,6 +60,11 @@ function ModelSelector({
                                 <div className="flex items-center justify-between">
                                     <span className="text-sm font-medium flex items-center gap-2">
                                         {model.name}
+                                        {model.tag === 'preview' && (
+                                            <span className="px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded bg-amber-500/15 text-amber-500 border border-amber-500/20 leading-none">
+                                                Preview
+                                            </span>
+                                        )}
                                         {isLocked && <LockIcon className="w-3 h-3 text-muted-foreground" />}
                                     </span>
                                     {selectedModelId === model.id && <HugeiconsIcon icon={Tick02Icon} size={16} className="text-blue-500" />}
