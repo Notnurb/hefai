@@ -10,6 +10,9 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useUser } from '@clerk/nextjs';
 import { toast } from 'sonner';
+import { X, AlertTriangle } from 'lucide-react';
+
+const TRIPLEPEDIA_NOTICE_KEY = 'triplepedia_notice_dismissed';
 
 export default function ChatIdPage() {
     const params = useParams();
@@ -24,8 +27,8 @@ export default function ChatIdPage() {
     } = useChatStreaming();
     const { selectConversation, createConversation, sendMessage } = useChatActions();
     const { isSignedIn, isLoaded } = useUser();
-    const [selectedModel, setSelectedModel] = useState('suzhou-3'); // Default to restricted model
-    const [extendedThinking, setExtendedThinking] = useState(false);
+    const [selectedModel, setSelectedModel] = useState('suzhou-3');
+    const [reasoningLevel, setReasoningLevel] = useState('medium');
     const [selectedTone, setSelectedTone] = useState<ToneType>('concise');
 
     // Persistent mode toggles
@@ -33,6 +36,19 @@ export default function ChatIdPage() {
     const [activeTone, setActiveTone] = useState<ToneType | null>(null);
 
     const [guestMsgCount, setGuestMsgCount] = useState(0);
+    const [showNotice, setShowNotice] = useState(false);
+
+    useEffect(() => {
+        const dismissed = localStorage.getItem(TRIPLEPEDIA_NOTICE_KEY);
+        if (!dismissed) {
+            setShowNotice(true);
+        }
+    }, []);
+
+    const dismissNotice = useCallback(() => {
+        localStorage.setItem(TRIPLEPEDIA_NOTICE_KEY, 'true');
+        setShowNotice(false);
+    }, []);
 
     const searchParams = useSearchParams();
     const imageParam = useMemo(() => searchParams.get('image'), [searchParams]);
@@ -123,8 +139,12 @@ export default function ChatIdPage() {
         setActiveTone(tone);
     }, []);
 
-    const toggleExtendedThinking = useCallback(() => {
-        setExtendedThinking((current) => !current);
+    const toggleReasoningLevel = useCallback(() => {
+        setReasoningLevel((current) => {
+            const levels = ['low', 'medium', 'high', 'xhigh', 'max'];
+            const idx = levels.indexOf(current);
+            return levels[(idx + 1) % levels.length];
+        });
     }, []);
 
     const handleSend = useCallback(async (content: string, file?: File) => {
@@ -169,7 +189,7 @@ export default function ChatIdPage() {
         sendMessage(
             content,
             selectedModel,
-            extendedThinking,
+            reasoningLevel !== 'low',
             selectedTone,
             () => { },
             imageDescription,
@@ -183,7 +203,7 @@ export default function ChatIdPage() {
         router,
         sendMessage,
         selectedModel,
-        extendedThinking,
+        reasoningLevel,
         selectedTone,
         activeModes,
         activeTone,
@@ -196,6 +216,26 @@ export default function ChatIdPage() {
             "flex flex-col h-full relative transition-all duration-500 overflow-hidden",
             isEmpty ? "justify-center px-4" : "justify-between"
         )}>
+            {/* Triplepedia Notice */}
+            {showNotice && (
+                <div className="absolute top-4 right-4 z-50 max-w-sm bg-yellow-500/10 border border-yellow-500/30 rounded-lg px-4 py-3 shadow-lg backdrop-blur-sm">
+                    <div className="flex items-start gap-3">
+                        <p className="text-xs text-yellow-600 dark:text-yellow-400 flex-1">
+                            Triplepedia got put out of beta, due to it being unstable, and some unreleased models leaking through the code, into the UX. Expect it to be back in 1-3 days to May 16th.
+                        </p>
+                        <button onClick={dismissNotice} className="shrink-0 text-muted-foreground hover:text-foreground">
+                            <X className="w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
+            )}
+            {/* Server Issues Notice */}
+            <div className="absolute top-4 left-4 z-50 flex items-center gap-2 bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 shadow-lg backdrop-blur-sm">
+                <AlertTriangle className="w-4 h-4 text-red-500 shrink-0" />
+                <p className="text-xs text-red-500 font-medium">
+                    Servers are experiencing some issues. Expect little to no response. Our team is working fast to fix this. Estimated fix: May 16th
+                </p>
+            </div>
             {/* Chat area */}
             {!isEmpty && (
                 <div className="flex-1 w-full overflow-hidden">
@@ -235,15 +275,13 @@ export default function ChatIdPage() {
                 )}>
                     <InputBox
                         selectedModel={selectedModel}
-                        extendedThinking={extendedThinking}
+                        reasoningLevel={reasoningLevel}
                         isStreaming={isLoading}
                         activeModes={activeModes}
                         activeTone={activeTone}
                         onSend={handleSend}
                         onModelChange={setSelectedModel}
-                        onExtendedThinkingChange={toggleExtendedThinking}
-                        onSelectModel={setSelectedModel}
-                        onToggleExtended={toggleExtendedThinking}
+                        onReasoningLevelChange={setReasoningLevel}
                         onToggleMode={handleToggleMode}
                         onSetTone={handleSetTone}
                         initialContent={initialPrompt}

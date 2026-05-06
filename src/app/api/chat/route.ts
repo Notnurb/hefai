@@ -122,6 +122,7 @@ export async function POST(request: NextRequest) {
             messages,
             model,
             extendedThinking,
+            reasoningLevel,
             tone,
             activeModes = [] as ChatMode[],
             activeTone = null as ToneType | null,

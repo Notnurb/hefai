@@ -18,17 +18,15 @@ interface UploadedFile {
 
 interface InputBoxProps {
     selectedModel: string;
-    extendedThinking: boolean;
+    reasoningLevel: string;
     isStreaming: boolean;
     activeModes: ChatMode[];
     activeTone: ToneType | null;
     onSend: (content: string, file?: File) => void;
     onModelChange: (model: string) => void;
-    onExtendedThinkingChange: () => void;
+    onReasoningLevelChange: (level: string) => void;
     onToggleMode: (mode: ChatMode) => void;
     onSetTone: (tone: ToneType | null) => void;
-    onSelectModel?: (model: string) => void;
-    onToggleExtended?: () => void;
     initialContent?: string;
     initialFile?: File;
 }
@@ -42,26 +40,21 @@ const TONE_EMOJI: Record<ToneType, string> = {
 
 function InputBox({
     selectedModel,
-    extendedThinking,
+    reasoningLevel,
     isStreaming,
     activeModes,
     activeTone,
     onSend,
     onModelChange,
-    onExtendedThinkingChange,
+    onReasoningLevelChange,
     onToggleMode,
     onSetTone,
-    onSelectModel,
-    onToggleExtended,
     initialContent,
     initialFile,
 }: InputBoxProps) {
     const [content, setContent] = useState(initialContent || '');
     const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-    const handleModelChange = onSelectModel || onModelChange;
-    const handleToggleExtended = onToggleExtended || onExtendedThinkingChange;
 
     useEffect(() => {
         return () => {
@@ -71,7 +64,6 @@ function InputBox({
         };
     }, [uploadedFile?.preview]);
 
-    // Handle initial file
     useEffect(() => {
         if (initialFile) {
             const isImage = initialFile.type.startsWith('image/');
@@ -80,7 +72,6 @@ function InputBox({
         }
     }, [initialFile]);
 
-    // Handle initial content updates if needed (optional, but good for sync)
     useEffect(() => {
         if (initialContent && content === '') {
             setContent(initialContent);
@@ -117,8 +108,11 @@ function InputBox({
     }, []);
 
     const removeFile = useCallback(() => {
+        if (uploadedFile?.preview) {
+            URL.revokeObjectURL(uploadedFile.preview);
+        }
         setUploadedFile(null);
-    }, []);
+    }, [uploadedFile?.preview]);
 
     const hasActivePills = activeModes.length > 0 || activeTone !== null;
 
@@ -129,7 +123,6 @@ function InputBox({
                 "focus-within:shadow-md focus-within:border-brand/30 focus-within:ring-1 focus-within:ring-brand/15",
                 isStreaming && "opacity-80 pointer-events-none"
             )}>
-                {/* File Preview */}
                 {uploadedFile && (
                     <div className="px-3 pt-3">
                         <div className="flex items-center gap-2 bg-accent/50 rounded-xl px-3 py-2 w-fit">
@@ -153,7 +146,6 @@ function InputBox({
                     </div>
                 )}
 
-                {/* Active Mode Pills */}
                 {hasActivePills && (
                     <div className="flex flex-wrap items-center gap-1.5 px-3 pt-2.5">
                         {activeModes.map((modeId) => {
@@ -191,7 +183,6 @@ function InputBox({
                     </div>
                 )}
 
-                {/* Text Input Area */}
                 <div className="flex items-end p-2 gap-2">
                     <div className="mb-0.5">
                         <PlusMenu
@@ -229,14 +220,13 @@ function InputBox({
                     </Button>
                 </div>
 
-                {/* Footer / Controls */}
                 <div className="flex items-center justify-between px-3 pb-2 pt-0">
                     <div className="flex items-center gap-2">
                         <ModelSelector
                             selectedModelId={selectedModel}
-                            onSelectModel={handleModelChange}
-                            extendedThinking={extendedThinking}
-                            onToggleExtended={handleToggleExtended}
+                            reasoningLevel={reasoningLevel}
+                            onSelectModel={onModelChange}
+                            onReasoningLevelChange={onReasoningLevelChange}
                         />
                     </div>
 
@@ -252,17 +242,15 @@ function InputBox({
 function areInputBoxPropsEqual(prev: InputBoxProps, next: InputBoxProps) {
     return (
         prev.selectedModel === next.selectedModel &&
-        prev.extendedThinking === next.extendedThinking &&
+        prev.reasoningLevel === next.reasoningLevel &&
         prev.isStreaming === next.isStreaming &&
         prev.activeModes === next.activeModes &&
         prev.activeTone === next.activeTone &&
         prev.onSend === next.onSend &&
         prev.onModelChange === next.onModelChange &&
-        prev.onExtendedThinkingChange === next.onExtendedThinkingChange &&
+        prev.onReasoningLevelChange === next.onReasoningLevelChange &&
         prev.onToggleMode === next.onToggleMode &&
         prev.onSetTone === next.onSetTone &&
-        prev.onSelectModel === next.onSelectModel &&
-        prev.onToggleExtended === next.onToggleExtended &&
         prev.initialContent === next.initialContent &&
         prev.initialFile === next.initialFile
     );
