@@ -23,18 +23,20 @@ export const metadata: Metadata = {
     },
 };
 
+const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
 export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
-        <ClerkProvider>
-            <html lang="en" suppressHydrationWarning className={outfit.variable}>
-                <body className={cn("min-h-screen bg-background font-sans antialiased")}>
-                    <Providers>{children}</Providers>
-                </body>
-            </html>
-        </ClerkProvider>
+    const inner = (
+        <html lang="en" suppressHydrationWarning className={outfit.variable}>
+            <body className={cn("min-h-screen bg-background font-sans antialiased")}>
+                <Providers>{children}</Providers>
+            </body>
+        </html>
     );
+
+    return clerkKey ? <ClerkProvider publishableKey={clerkKey}>{inner}</ClerkProvider> : inner;
 }

@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from 'react';
-import { WebGLShader } from "@/components/ui/web-gl-shader";
+import dynamic from 'next/dynamic';
+const WebGLShader = dynamic(() => import('@/components/ui/web-gl-shader').then(mod => mod.WebGLShader), { ssr: false });
 import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { CoderAIInput } from "@/components/ui/coder-ai-input";
 import { CoderWorkspace } from "@/components/coder";

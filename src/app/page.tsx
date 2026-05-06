@@ -8,7 +8,7 @@ const ShaderAnimation = dynamic(() => import('@/components/ui/shader-animation')
 });
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { SplineScene } from '@/components/ui/splite';
+const SplineScene = dynamic(() => import('@/components/ui/splite').then(mod => mod.SplineScene), { ssr: false });
 import { Spotlight } from '@/components/ui/spotlight';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
 import { LandingHeader as Header } from '@/components/ui/landing-header';
